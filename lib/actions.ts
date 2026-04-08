@@ -17,16 +17,20 @@ export async function getPostById(id: number) {
 
 export async function createPost(formData: {
   title: string;
+  subtitle?: string;
   author: string;
   artwork?: string;
+  coverImage?: string;
   content: string;
 }) {
   const result = await db
     .insert(posts)
     .values({
       title: formData.title,
+      subtitle: formData.subtitle || null,
       author: formData.author,
       artwork: formData.artwork || null,
+      coverImage: formData.coverImage || null,
       content: formData.content,
     })
     .returning();
@@ -40,8 +44,10 @@ export async function updatePost(
   id: number,
   formData: {
     title: string;
+    subtitle?: string;
     author: string;
     artwork?: string;
+    coverImage?: string;
     content: string;
   }
 ) {
@@ -49,8 +55,10 @@ export async function updatePost(
     .update(posts)
     .set({
       title: formData.title,
+      subtitle: formData.subtitle || null,
       author: formData.author,
       artwork: formData.artwork || null,
+      coverImage: formData.coverImage || null,
       content: formData.content,
       updatedAt: new Date(),
     })

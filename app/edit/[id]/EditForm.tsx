@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Editor } from "@/components/Editor";
 import { updatePost } from "@/lib/actions";
-import { ArrowRight } from "@phosphor-icons/react";
+import Link from "next/link";
 import type { Post } from "@/lib/schema";
 
 interface EditFormProps {
@@ -13,7 +13,9 @@ interface EditFormProps {
 export function EditForm({ post }: EditFormProps) {
   const [author, setAuthor] = useState(post.author);
   const [title, setTitle] = useState(post.title);
-  const [artwork, setArtwork] = useState(post.artwork ?? "");
+  const [subtitle, setSubtitle] = useState(post.subtitle ?? "");
+  const [coverImage, setCoverImage] = useState(post.coverImage ?? "");
+  const [showCoverInput, setShowCoverInput] = useState(!!post.coverImage);
   const [content, setContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,8 +26,9 @@ export function EditForm({ post }: EditFormProps) {
     try {
       await updatePost(post.id, {
         title: title.trim(),
+        subtitle: subtitle.trim() || undefined,
         author: author.trim(),
-        artwork: artwork.trim() || undefined,
+        coverImage: coverImage.trim() || undefined,
         content,
       });
     } catch {
@@ -36,75 +39,101 @@ export function EditForm({ post }: EditFormProps) {
   const isValid = title.trim() && author.trim() && content.trim();
 
   return (
-    <div className="space-y-6">
-      {/* Author */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-ink/60">작성자</label>
-        <input
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          placeholder="이름을 입력하세요"
-          className="w-full px-5 py-3.5 rounded-xl bg-white/80 border border-warm-gray/30 text-ink placeholder:text-warm-gray outline-none transition-all duration-500 focus:border-gold/60 focus:shadow-[0_0_0_3px_rgba(253,199,0,0.12)]"
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",
-          }}
-        />
+    <div className="min-h-screen bg-white">
+      {/* Top bar */}
+      <div className="sticky top-[60px] z-40 bg-white border-b border-gray-100">
+        <div className="max-w-[728px] mx-auto px-6 h-14 flex items-center justify-between">
+          <Link href={`/article/${post.id}`} className="text-sm text-gray-500 hover:text-[#1A1A1A] transition-colors">
+            ← 돌아가기
+          </Link>
+          <div className="flex items-center gap-3">
+            <input
+              type="text"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              placeholder="작성자"
+              className="w-28 px-3 py-1.5 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#FDC700] transition-colors"
+            />
+            <button
+              onClick={handleSubmit}
+              disabled={!isValid || isSubmitting}
+              className="text-sm font-medium bg-[#FDC700] text-[#1A1A1A] px-5 py-2 rounded-full hover:bg-[#FDC700]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSubmitting ? "수정 중..." : "수정하기"}
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Title */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-ink/60">제목</label>
+      {/* Editor area */}
+      <div className="max-w-[728px] mx-auto px-6 pt-10 pb-32">
+        {/* Cover image */}
+        {coverImage ? (
+          <div className="relative mb-8 group">
+            <img
+              src={coverImage}
+              alt="Cover"
+              className="w-full h-[320px] object-cover rounded-lg"
+            />
+            <button
+              onClick={() => {
+                setCoverImage("");
+                setShowCoverInput(false);
+              }}
+              className="absolute top-3 right-3 bg-black/50 text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              삭제
+            </button>
+          </div>
+        ) : showCoverInput ? (
+          <div className="mb-8 flex gap-2">
+            <input
+              type="url"
+              value={coverImage}
+              onChange={(e) => setCoverImage(e.target.value)}
+              placeholder="이미지 URL을 입력하세요"
+              autoFocus
+              className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#FDC700] transition-colors"
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setShowCoverInput(false);
+              }}
+            />
+            <button
+              onClick={() => setShowCoverInput(false)}
+              className="text-sm text-gray-400 hover:text-gray-600 px-3"
+            >
+              취소
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowCoverInput(true)}
+            className="mb-8 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            + 대표 이미지 추가
+          </button>
+        )}
+
+        {/* Title */}
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="글의 제목"
-          className="w-full px-5 py-4 rounded-xl bg-white/80 border border-warm-gray/30 text-ink text-2xl font-bold placeholder:text-warm-gray placeholder:font-normal outline-none transition-all duration-500 focus:border-gold/60 focus:shadow-[0_0_0_3px_rgba(253,199,0,0.12)]"
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",
-          }}
+          placeholder="제목"
+          className="w-full text-[36px] font-bold text-[#1A1A1A] placeholder:text-gray-300 outline-none border-none mb-2 leading-tight"
         />
-      </div>
 
-      {/* Artwork Reference */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-ink/60">
-          작품명 <span className="text-ink/30">(선택)</span>
-        </label>
+        {/* Subtitle */}
         <input
           type="text"
-          value={artwork}
-          onChange={(e) => setArtwork(e.target.value)}
-          placeholder="참조하는 작품의 제목"
-          className="w-full px-5 py-3.5 rounded-xl bg-white/80 border border-warm-gray/30 text-ink placeholder:text-warm-gray outline-none transition-all duration-500 focus:border-gold/60 focus:shadow-[0_0_0_3px_rgba(253,199,0,0.12)]"
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",
-          }}
+          value={subtitle}
+          onChange={(e) => setSubtitle(e.target.value)}
+          placeholder="소제목 (선택사항)"
+          className="w-full text-[20px] text-gray-500 placeholder:text-gray-300 outline-none border-none mb-8"
         />
-      </div>
 
-      {/* Editor */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-ink/60">본문</label>
+        {/* Editor */}
         <Editor content={post.content} onChange={setContent} />
-      </div>
-
-      {/* Submit */}
-      <div className="pt-4">
-        <button
-          onClick={handleSubmit}
-          disabled={!isValid || isSubmitting}
-          className="group inline-flex items-center gap-3 bg-ink text-cream px-8 py-4 rounded-full text-base font-semibold transition-all duration-500 hover:bg-ink/90 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",
-          }}
-        >
-          <span>{isSubmitting ? "수정 중..." : "수정하기"}</span>
-          <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/15 group-hover:bg-gold group-hover:text-ink transition-all duration-500 group-disabled:group-hover:bg-white/15 group-disabled:group-hover:text-cream">
-            <ArrowRight size={14} weight="bold" />
-          </span>
-        </button>
       </div>
     </div>
   );

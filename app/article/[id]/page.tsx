@@ -23,91 +23,69 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-32 px-6 md:px-12">
-      <div className="max-w-[65ch] mx-auto">
-        {/* Back button */}
+    <div className="min-h-screen bg-white">
+      {/* Cover Image */}
+      {post.coverImage && (
+        <div className="w-full max-h-[480px] overflow-hidden">
+          <img
+            src={post.coverImage}
+            alt=""
+            className="w-full h-[480px] object-cover"
+          />
+        </div>
+      )}
+
+      <div className="max-w-[728px] mx-auto px-6 pt-10 pb-20 relative">
+        {/* Edit button */}
         <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-ink/40 hover:text-ink transition-colors duration-300 mb-12 group"
+          href={`/edit/${post.id}`}
+          className="absolute top-10 right-6 w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:text-[#1A1A1A] hover:border-gray-300 transition-colors"
+          title="수정"
         >
           <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="transition-transform duration-300 group-hover:-translate-x-1"
-            style={{
-              transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",
-            }}
           >
-            <path d="M10 4L6 8l4 4" />
+            <path d="M10 2l2 2L5 11H3V9L10 2z" />
           </svg>
-          <span>목록으로</span>
         </Link>
 
         {/* Article Header */}
-        <header className="mb-12">
-          {post.artwork && (
-            <span className="inline-block text-xs font-medium tracking-wide uppercase text-gold bg-gold/10 px-3 py-1 rounded-full mb-6">
-              {post.artwork}
-            </span>
-          )}
-
-          <h1 className="text-4xl md:text-5xl font-black text-ink leading-tight mb-6">
+        <header className="mb-10">
+          <h1 className="text-[32px] md:text-[40px] font-bold text-[#1A1A1A] leading-tight mb-3">
             {post.title}
           </h1>
 
-          <div className="flex items-center gap-4 text-sm text-ink/40">
-            <span className="font-medium text-ink/60">{post.author}</span>
-            <span className="w-1 h-1 rounded-full bg-ink/20" />
+          {post.subtitle && (
+            <p className="text-xl text-gray-500 mb-4">{post.subtitle}</p>
+          )}
+
+          <div className="flex items-center gap-3 text-sm text-gray-400">
+            <span className="font-medium text-gray-600">{post.author}</span>
+            <span>·</span>
             <time>{formatDate(post.createdAt)}</time>
             {post.updatedAt > post.createdAt && (
               <>
-                <span className="w-1 h-1 rounded-full bg-ink/20" />
-                <span className="text-ink/30">
-                  수정됨 {formatDate(post.updatedAt)}
-                </span>
+                <span>·</span>
+                <span className="text-gray-300">수정됨 {formatDate(post.updatedAt)}</span>
               </>
             )}
           </div>
 
-          <div className="mt-8 w-16 h-0.5 bg-gold rounded-full" />
+          <div className="mt-6 border-b border-gray-100" />
         </header>
 
         {/* Article Body */}
         <article
-          className="prose-tuche text-ink/80 leading-[1.9] text-[1.0625rem]"
+          className="prose-tuche text-[#1A1A1A]/80 leading-[1.9] text-[1.0625rem]"
           dangerouslySetInnerHTML={{ __html: post.content }}
-          style={{
-            fontFamily: "var(--font-outfit)",
-          }}
         />
-
-        {/* Edit link */}
-        <div className="mt-16 pt-8 border-t border-warm-gray/30">
-          <Link
-            href={`/edit/${post.id}`}
-            className="inline-flex items-center gap-2 text-sm text-ink/40 hover:text-ink transition-colors duration-300"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M10 2l2 2L5 11H3V9L10 2z" />
-            </svg>
-            <span>이 글 수정하기</span>
-          </Link>
-        </div>
       </div>
     </div>
   );

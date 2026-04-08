@@ -3,6 +3,8 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import Image from "@tiptap/extension-image";
+import { EmbedExtension } from "./EmbedExtension";
 import { EditorToolbar } from "./EditorToolbar";
 
 interface EditorProps {
@@ -19,6 +21,13 @@ export function Editor({ content = "", onChange }: EditorProps) {
       Placeholder.configure({
         placeholder: "글을 작성해주세요...",
       }),
+      Image.configure({
+        inline: false,
+        HTMLAttributes: {
+          class: "editor-image",
+        },
+      }),
+      EmbedExtension,
     ],
     content,
     editorProps: {
@@ -32,10 +41,7 @@ export function Editor({ content = "", onChange }: EditorProps) {
   });
 
   return (
-    <div
-      className="rounded-2xl overflow-hidden border border-warm-gray/30 bg-white/80 transition-all duration-500 focus-within:border-gold/60 focus-within:shadow-[0_0_0_3px_rgba(253,199,0,0.12)]"
-      style={{ transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)" }}
-    >
+    <div className="rounded-lg overflow-hidden border border-gray-200 bg-white">
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>

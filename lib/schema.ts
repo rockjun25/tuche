@@ -3,8 +3,10 @@ import { pgTable, text, integer, serial, timestamp } from "drizzle-orm/pg-core";
 export const posts = pgTable("posts", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
+  subtitle: text("subtitle"),
   author: text("author").notNull(),
   artwork: text("artwork"),
+  coverImage: text("cover_image"),
   content: text("content").notNull(),
   createdAt: timestamp("created_at", { mode: "date" })
     .notNull()
