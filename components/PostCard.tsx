@@ -19,12 +19,43 @@ interface PostCardProps {
   post: Post;
 }
 
+/**
+ * 정사각형 커버 이미지 컴포넌트.
+ * - 이미지가 정사각형이면 꽉 채워서 표시 (object-cover)
+ * - 세로로 긴 포스터/앨범이면 블러 배경 위에 object-contain으로 표시
+ *   → 좌우 여백이 이미지에서 추출한 색감으로 자연스럽게 채워짐
+ */
+function CoverImage({ src }: { src: string }) {
+  return (
+    <div
+      className="relative flex-shrink-0 overflow-hidden rounded-md"
+      style={{ width: 112, height: 112 }}
+    >
+      {/* 블러 배경 — 이미지 색감을 그대로 퍼트려서 letterbox 여백 채움 */}
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover scale-110"
+        style={{ filter: "blur(18px) brightness(0.85) saturate(1.3)" }}
+      />
+      {/* 실제 이미지 — 정사각형 박스 안에 비율 유지하며 contain */}
+      <img
+        src={src}
+        alt=""
+        className="relative z-10 w-full h-full object-contain"
+        style={{ imageRendering: "auto" }}
+      />
+    </div>
+  );
+}
+
 export function PostCard({ post }: PostCardProps) {
   const excerpt = stripHtml(post.content).slice(0, 200);
 
   return (
     <Link href={`/article/${post.id}`} className="group block py-6 border-b border-gray-100">
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex items-start justify-between gap-5">
         <div className="flex-1 min-w-0">
           <h2 className="text-[18px] font-bold text-[#1A1A1A] leading-snug mb-1 group-hover:text-[#1A1A1A]/70 transition-colors">
             {post.title}
@@ -47,13 +78,7 @@ export function PostCard({ post }: PostCardProps) {
         </div>
 
         {post.coverImage && (
-          <div className="flex-shrink-0">
-            <img
-              src={post.coverImage}
-              alt=""
-              className="w-[120px] h-[80px] object-cover rounded-md"
-            />
-          </div>
+          <CoverImage src={post.coverImage} />
         )}
       </div>
     </Link>
