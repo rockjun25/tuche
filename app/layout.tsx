@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     description: "글의 기록",
     images: ["/api/og/default"],
     siteName: "Tuché",
+    url: undefined,
   },
   twitter: {
     card: "summary_large_image",

@@ -34,6 +34,7 @@ export async function generateMetadata({
       ],
       type: "article",
       siteName: "Tuché",
+      url: undefined,
     },
     twitter: {
       card: "summary_large_image",
