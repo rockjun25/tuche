@@ -1,9 +1,47 @@
 import { getPostById } from "@/lib/actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
+import ShareButton from "@/components/ShareButton";
 
 interface ArticlePageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ArticlePageProps): Promise<Metadata> {
+  const { id } = await params;
+  const post = await getPostById(Number(id));
+
+  if (!post) return {};
+
+  const ogImageUrl = `/api/og?id=${id}`;
+
+  return {
+    title: `${post.title} — Tuché`,
+    description: post.subtitle || post.title,
+    openGraph: {
+      title: post.title,
+      description: post.subtitle || "",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      type: "article",
+      siteName: "Tuché",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.subtitle || "",
+      images: [ogImageUrl],
+    },
+  };
 }
 
 function formatDate(date: Date): string {
@@ -85,6 +123,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article
           className="prose-tuche text-[#1A1A1A]/80 leading-[1.9] text-[1.0625rem]"
           dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+
+        {/* Share */}
+        <ShareButton
+          postId={post.id}
+          title={post.title}
+          subtitle={post.subtitle || ""}
         />
       </div>
     </div>
