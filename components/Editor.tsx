@@ -17,7 +17,7 @@ export function Editor({ content = "", onChange }: EditorProps) {
         heading: { levels: [2, 3] },
       }),
       Placeholder.configure({
-        placeholder: "비평을 작성해주세요...",
+        placeholder: "글을 작성해주세요...",
       }),
     ],
     content,

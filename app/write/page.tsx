@@ -35,7 +35,7 @@ export default function WritePage() {
       <div className="max-w-2xl mx-auto">
         <div className="mb-12">
           <span className="inline-block text-xs font-medium tracking-widest uppercase text-ink/40 bg-ink/5 px-4 py-1.5 rounded-full mb-4">
-            새 비평
+            새 글
           </span>
           <h1 className="text-3xl font-bold text-ink">쓰기</h1>
         </div>
@@ -67,7 +67,7 @@ export default function WritePage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="비평의 제목"
+              placeholder="글의 제목"
               className="w-full px-5 py-4 rounded-xl bg-white/80 border border-warm-gray/30 text-ink text-2xl font-bold placeholder:text-warm-gray placeholder:font-normal outline-none transition-all duration-500 focus:border-gold/60 focus:shadow-[0_0_0_3px_rgba(253,199,0,0.12)]"
               style={{
                 transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",

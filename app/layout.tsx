@@ -3,8 +3,8 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Tuche — 비평의 기록",
-  description: "예술 비평 토론 그룹의 아카이브",
+  title: "Tuche — 글의 기록",
+  description: "예술 글 토론 그룹의 아카이브",
   icons: {
     icon: "/logo.jpg",
   },

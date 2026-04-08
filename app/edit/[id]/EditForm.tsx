@@ -59,7 +59,7 @@ export function EditForm({ post }: EditFormProps) {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="비평의 제목"
+          placeholder="글의 제목"
           className="w-full px-5 py-4 rounded-xl bg-white/80 border border-warm-gray/30 text-ink text-2xl font-bold placeholder:text-warm-gray placeholder:font-normal outline-none transition-all duration-500 focus:border-gold/60 focus:shadow-[0_0_0_3px_rgba(253,199,0,0.12)]"
           style={{
             transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",

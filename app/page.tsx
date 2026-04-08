@@ -21,7 +21,7 @@ export default async function FeedPage() {
           </h1>
 
           <p className="text-xl md:text-2xl text-ink/40 font-light max-w-md leading-relaxed">
-            비평의 기록
+            글의 기록
           </p>
 
           <div className="mt-10 w-24 h-0.5 bg-gold rounded-full" />
@@ -94,11 +94,11 @@ function EmptyState() {
           </div>
 
           <h3 className="text-2xl font-bold text-ink mb-3">
-            아직 게시된 비평이 없습니다
+            아직 게시된 글이 없습니다
           </h3>
 
           <p className="text-ink/40 leading-relaxed mb-8">
-            첫 번째 비평을 작성하고 기록을 시작해보세요.
+            첫 번째 글을 작성하고 기록을 시작해보세요.
           </p>
 
           <Link href="/write">
@@ -108,7 +108,7 @@ function EmptyState() {
                 transitionTimingFunction: "cubic-bezier(0.32,0.72,0,1)",
               }}
             >
-              <span>첫 비평 쓰기</span>
+              <span>첫 글 쓰기</span>
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white/15 group-hover:bg-gold group-hover:text-ink transition-all duration-500">
                 <svg
                   width="12"
