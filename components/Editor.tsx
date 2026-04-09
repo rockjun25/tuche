@@ -34,6 +34,35 @@ export function Editor({ content = "", onChange }: EditorProps) {
       attributes: {
         class: "tiptap px-6 py-5 focus:outline-none",
       },
+      handlePaste: (view, event) => {
+        const clipboard = event.clipboardData;
+        if (!clipboard) return false;
+
+        const items = Array.from(clipboard.items || []);
+        const imageItem = items.find((item) => item.type.startsWith("image/"));
+        if (!imageItem) return false;
+
+        const file = imageItem.getAsFile();
+        if (!file) return false;
+
+        const insertPos = view.state.selection.from;
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const src = reader.result;
+          if (typeof src !== "string") return;
+
+          const imageType = view.state.schema.nodes.image;
+          if (!imageType) return;
+
+          const imageNode = imageType.create({ src });
+          const tr = view.state.tr.insert(insertPos, imageNode);
+          view.dispatch(tr.scrollIntoView());
+        };
+
+        reader.readAsDataURL(file);
+        return true;
+      },
     },
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
