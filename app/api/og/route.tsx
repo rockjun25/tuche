@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "center",
             padding: "60px 50px",
           }}
         >
@@ -95,21 +95,14 @@ export async function GET(request: NextRequest) {
                 {post.subtitle}
               </div>
             )}
-          </div>
 
-          {/* Bottom — author + URL */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-            }}
-          >
+            {/* Author */}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
+                marginTop: "6px",
               }}
             >
               <div
