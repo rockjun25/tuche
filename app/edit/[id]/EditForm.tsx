@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Editor } from "@/components/Editor";
-import { updatePost } from "@/lib/actions";
+import { autosavePost, updatePost } from "@/lib/actions";
 import Link from "next/link";
 import type { Post } from "@/lib/schema";
 
 interface EditFormProps {
   post: Post;
 }
+
+const AUTOSAVE_INTERVAL_MS = 5 * 60 * 1000;
+
+type AutoSaveState = "idle" | "saving" | "saved" | "error";
 
 export function EditForm({ post }: EditFormProps) {
   const [author, setAuthor] = useState(post.author);
@@ -18,29 +22,142 @@ export function EditForm({ post }: EditFormProps) {
   const [showCoverInput, setShowCoverInput] = useState(!!post.coverImage);
   const [content, setContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [autoSaveState, setAutoSaveState] = useState<AutoSaveState>("idle");
+  const [lastAutoSavedAt, setLastAutoSavedAt] = useState<Date | null>(null);
+  const [restoredDraft, setRestoredDraft] = useState(false);
+
+  const draftKey = `tuche:edit-draft:${post.id}`;
+
+  const snapshot = useMemo(
+    () =>
+      JSON.stringify({
+        title,
+        subtitle,
+        author,
+        coverImage,
+        content,
+      }),
+    [title, subtitle, author, coverImage, content]
+  );
+
+  const lastSavedSnapshotRef = useRef(
+    JSON.stringify({
+      title: post.title,
+      subtitle: post.subtitle ?? "",
+      author: post.author,
+      coverImage: post.coverImage ?? "",
+      content: post.content,
+    })
+  );
+
+  const isValid = title.trim() && author.trim() && content.trim();
+  const hasUnsavedChanges = snapshot !== lastSavedSnapshotRef.current;
+
+  const buildPayload = useCallback(
+    () => ({
+      title: title.trim(),
+      subtitle: subtitle.trim() || undefined,
+      author: author.trim(),
+      coverImage: coverImage.trim() || undefined,
+      content,
+    }),
+    [title, subtitle, author, coverImage, content]
+  );
+
+  const runAutoSave = useCallback(async () => {
+    if (!isValid || !hasUnsavedChanges || isSubmitting) return;
+
+    setAutoSaveState("saving");
+    try {
+      await autosavePost(post.id, buildPayload());
+      lastSavedSnapshotRef.current = snapshot;
+      setLastAutoSavedAt(new Date());
+      setAutoSaveState("saved");
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(draftKey);
+      }
+    } catch {
+      setAutoSaveState("error");
+    }
+  }, [isValid, hasUnsavedChanges, isSubmitting, post.id, buildPayload, snapshot, draftKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const raw = window.localStorage.getItem(draftKey);
+    if (!raw) return;
+
+    try {
+      const draft = JSON.parse(raw) as {
+        title?: string;
+        subtitle?: string;
+        author?: string;
+        coverImage?: string;
+        content?: string;
+      };
+
+      if (typeof draft.title === "string") setTitle(draft.title);
+      if (typeof draft.subtitle === "string") setSubtitle(draft.subtitle);
+      if (typeof draft.author === "string") setAuthor(draft.author);
+      if (typeof draft.coverImage === "string") setCoverImage(draft.coverImage);
+      if (typeof draft.content === "string") setContent(draft.content);
+      setRestoredDraft(true);
+    } catch {
+      window.localStorage.removeItem(draftKey);
+    }
+  }, [draftKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.localStorage.setItem(
+      draftKey,
+      JSON.stringify({
+        title,
+        subtitle,
+        author,
+        coverImage,
+        content,
+        updatedAt: Date.now(),
+      })
+    );
+  }, [draftKey, title, subtitle, author, coverImage, content]);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      void runAutoSave();
+    }, AUTOSAVE_INTERVAL_MS);
+
+    return () => window.clearInterval(intervalId);
+  }, [runAutoSave]);
+
+  useEffect(() => {
+    function onVisibilityChange() {
+      if (document.visibilityState === "hidden") {
+        void runAutoSave();
+      }
+    }
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [runAutoSave]);
 
   async function handleSubmit() {
     if (!title.trim() || !author.trim() || !content.trim()) return;
 
     setIsSubmitting(true);
     try {
-      await updatePost(post.id, {
-        title: title.trim(),
-        subtitle: subtitle.trim() || undefined,
-        author: author.trim(),
-        coverImage: coverImage.trim() || undefined,
-        content,
-      });
+      await updatePost(post.id, buildPayload());
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(draftKey);
+      }
     } catch {
       setIsSubmitting(false);
     }
   }
 
-  const isValid = title.trim() && author.trim() && content.trim();
-
   return (
     <div className="min-h-screen bg-white">
-      {/* Top bar */}
       <div className="sticky top-[60px] z-40 bg-white border-b border-gray-100">
         <div className="max-w-[728px] mx-auto px-6 h-14 flex items-center justify-between">
           <Link href={`/article/${post.id}`} className="text-sm text-gray-500 hover:text-[#1A1A1A] transition-colors">
@@ -65,9 +182,16 @@ export function EditForm({ post }: EditFormProps) {
         </div>
       </div>
 
-      {/* Editor area */}
       <div className="max-w-[728px] mx-auto px-6 pt-10 pb-32">
-        {/* Cover image */}
+        <p className="mb-5 text-xs text-gray-500">
+          {autoSaveState === "saving" && "자동저장 중..."}
+          {autoSaveState === "saved" && lastAutoSavedAt && `자동저장 완료 ${lastAutoSavedAt.toLocaleTimeString("ko-KR")}`}
+          {autoSaveState === "error" && "자동저장 실패, 네트워크 확인 후 수정하기 버튼을 눌러주세요"}
+          {autoSaveState === "idle" && hasUnsavedChanges && "미저장 변경사항이 있습니다"}
+          {autoSaveState === "idle" && !hasUnsavedChanges && "변경사항이 저장된 상태입니다"}
+          {restoredDraft && " / 로컬 임시저장을 복구했습니다"}
+        </p>
+
         {coverImage ? (
           <div className="relative mb-8 group">
             <img
@@ -114,7 +238,6 @@ export function EditForm({ post }: EditFormProps) {
           </button>
         )}
 
-        {/* Title */}
         <input
           type="text"
           value={title}
@@ -123,7 +246,6 @@ export function EditForm({ post }: EditFormProps) {
           className="w-full text-[36px] font-bold text-[#1A1A1A] placeholder:text-gray-300 outline-none border-none mb-2 leading-tight"
         />
 
-        {/* Subtitle */}
         <input
           type="text"
           value={subtitle}
@@ -132,8 +254,7 @@ export function EditForm({ post }: EditFormProps) {
           className="w-full text-[20px] text-gray-500 placeholder:text-gray-300 outline-none border-none mb-8"
         />
 
-        {/* Editor */}
-        <Editor content={post.content} onChange={setContent} />
+        <Editor content={content} onChange={setContent} />
       </div>
     </div>
   );

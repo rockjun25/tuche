@@ -68,3 +68,33 @@ export async function updatePost(
   revalidatePath(`/article/${id}`);
   redirect(`/article/${id}`);
 }
+
+export async function autosavePost(
+  id: number,
+  formData: {
+    title: string;
+    subtitle?: string;
+    author: string;
+    artwork?: string;
+    coverImage?: string;
+    content: string;
+  }
+) {
+  await db
+    .update(posts)
+    .set({
+      title: formData.title,
+      subtitle: formData.subtitle || null,
+      author: formData.author,
+      artwork: formData.artwork || null,
+      coverImage: formData.coverImage || null,
+      content: formData.content,
+      updatedAt: new Date(),
+    })
+    .where(eq(posts.id, id));
+
+  revalidatePath(`/article/${id}`);
+  revalidatePath(`/edit/${id}`);
+
+  return { ok: true, savedAt: new Date().toISOString() };
+}
