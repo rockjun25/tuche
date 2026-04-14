@@ -1,6 +1,5 @@
 import { getPosts } from "@/lib/actions";
 import { PostCard } from "@/components/PostCard";
-import { DeletePostButton } from "@/components/DeletePostButton";
 import Link from "next/link";
 
 export default async function TucheFeedPage() {
@@ -22,12 +21,7 @@ export default async function TucheFeedPage() {
         ) : (
           <div>
             {posts.map((post) => (
-              <div key={post.id} className="relative">
-                <div className="absolute right-0 top-5 z-20">
-                  <DeletePostButton postId={post.id} />
-                </div>
-                <PostCard post={post} />
-              </div>
+              <PostCard key={post.id} post={post} />
             ))}
           </div>
         )}

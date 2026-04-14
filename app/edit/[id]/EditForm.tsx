@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Editor } from "@/components/Editor";
-import { autosavePost, updatePost } from "@/lib/actions";
+import { autosavePost, deletePost, updatePost } from "@/lib/actions";
 import Link from "next/link";
 import type { Post } from "@/lib/schema";
 
@@ -22,11 +23,14 @@ export function EditForm({ post }: EditFormProps) {
   const [showCoverInput, setShowCoverInput] = useState(!!post.coverImage);
   const [content, setContent] = useState(post.content);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeletePending, startDeleteTransition] = useTransition();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [autoSaveState, setAutoSaveState] = useState<AutoSaveState>("idle");
   const [lastAutoSavedAt, setLastAutoSavedAt] = useState<Date | null>(null);
   const [restoredDraft, setRestoredDraft] = useState(false);
 
   const draftKey = `tuche:edit-draft:${post.id}`;
+  const router = useRouter();
 
   const snapshot = useMemo(
     () =>
@@ -156,6 +160,25 @@ export function EditForm({ post }: EditFormProps) {
     }
   }
 
+  function handleDelete() {
+    const ok = window.confirm("이 글을 삭제할까요?");
+    if (!ok) return;
+
+    setDeleteError(null);
+    startDeleteTransition(async () => {
+      try {
+        await deletePost(post.id);
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(draftKey);
+        }
+        router.push("/tuche");
+        router.refresh();
+      } catch {
+        setDeleteError("삭제에 실패했습니다");
+      }
+    });
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <div className="sticky top-[60px] z-40 bg-white border-b border-gray-100">
@@ -255,6 +278,18 @@ export function EditForm({ post }: EditFormProps) {
         />
 
         <Editor content={content} onChange={setContent} />
+
+        <div className="mt-10 pt-8 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={isDeletePending}
+            className="text-sm font-bold border-2 border-black px-4 py-2 bg-white hover:bg-black hover:text-white transition-colors disabled:opacity-50"
+          >
+            {isDeletePending ? "삭제 중..." : "이 글 삭제"}
+          </button>
+          {deleteError && <p className="mt-2 text-xs text-red-600 font-bold">{deleteError}</p>}
+        </div>
       </div>
     </div>
   );
