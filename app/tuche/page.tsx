@@ -12,6 +12,9 @@ export default async function TucheFeedPage() {
         <p className="text-base text-gray-500">글의 기록</p>
         <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
           <span>아카이브</span>
+          <Link href="/tuche/trash" className="underline text-gray-500 hover:text-black">
+            휴지통
+          </Link>
         </div>
       </section>
 

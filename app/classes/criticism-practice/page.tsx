@@ -85,6 +85,7 @@ export default function CriticismPracticePage() {
 
                 <ProgressChecklist
                   storageKey="daean-criticism"
+                  classKey="criticism-practice"
                   items={[
                     ...criticismLectures.map((lecture) => ({
                       id: `강의 ${lecture.label}`,

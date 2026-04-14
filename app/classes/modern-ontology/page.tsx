@@ -73,6 +73,7 @@ export default function ModernOntologyPage() {
 
                 <ProgressChecklist
                   storageKey="daean-modern-ontology"
+                  classKey="modern-ontology"
                   items={modernOntologyLectures.map((lecture) => ({
                     id: lecture.label,
                     label: lecture.label,
