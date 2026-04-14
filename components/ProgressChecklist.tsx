@@ -25,24 +25,31 @@ export function ProgressChecklist({ storageKey, items }: ProgressChecklistProps)
 
   const percent = items.length === 0 ? 0 : Math.round((doneCount / items.length) * 100);
 
-  const toggle = (id: string) => {
-    const next = { ...checked, [id]: !checked[id] };
+  const save = (next: Record<string, boolean>) => {
     setChecked(next);
     localStorage.setItem(storageKey, JSON.stringify(next));
   };
 
+  const toggle = (id: string) => {
+    const next = { ...checked, [id]: !checked[id] };
+    save(next);
+  };
+
+  const markDone = (id: string) => {
+    if (checked[id]) return;
+    const next = { ...checked, [id]: true };
+    save(next);
+  };
+
   return (
-    <div className="border-4 border-black bg-white p-5">
-      <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm font-bold">진도</p>
-        <p className="text-sm font-bold">{doneCount}/{items.length} ({percent}%)</p>
+    <div className="border-[5px] border-black bg-white p-5 shadow-[8px_8px_0_#000]">
+      <div className="mb-4 flex items-center justify-between border-b-4 border-black pb-3">
+        <p className="text-sm font-black uppercase">진도</p>
+        <p className="text-sm font-black">{doneCount}/{items.length} {percent}%</p>
       </div>
       <div className="space-y-2 max-h-[420px] overflow-auto pr-1">
         {items.map((item) => (
-          <label
-            key={item.id}
-            className="flex items-center gap-3 border-2 border-black p-2 cursor-pointer hover:bg-yellow-100"
-          >
+          <div key={item.id} className="flex items-center gap-3 border-2 border-black p-2 bg-white hover:bg-[#f2f2f2]">
             <input
               type="checkbox"
               checked={!!checked[item.id]}
@@ -50,15 +57,22 @@ export function ProgressChecklist({ storageKey, items }: ProgressChecklistProps)
               className="h-4 w-4 accent-black"
             />
             {item.href ? (
-              <a href={item.href} target="_blank" rel="noreferrer" className="text-sm underline">
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => markDone(item.id)}
+                className="text-sm font-semibold underline"
+              >
                 {item.label}
               </a>
             ) : (
-              <span className="text-sm">{item.label}</span>
+              <span className="text-sm font-semibold">{item.label}</span>
             )}
-          </label>
+          </div>
         ))}
       </div>
+      <p className="mt-3 text-xs font-semibold text-[#333]">링크 클릭 시 자동 체크됩니다.</p>
     </div>
   );
 }

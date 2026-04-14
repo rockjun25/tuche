@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#f3f3f3]">
+    <div className="min-h-screen bg-white">
       <section className="max-w-6xl mx-auto px-6 py-10">
-        <div className="border-[6px] border-black bg-white p-8 md:p-12 shadow-[12px_12px_0_#000]">
+        <div className="border-[6px] border-black bg-white p-8 md:p-12 shadow-[14px_14px_0_#000]">
           <p className="text-sm font-black uppercase tracking-wider mb-3">Tuché</p>
           <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4">공강 시간에 만드는 나만의 수업</h1>
-          <p className="text-base md:text-lg font-semibold max-w-3xl">
+          <p className="text-base md:text-lg font-bold max-w-3xl border-l-4 border-black pl-4">
             현대존재론과 비평의 이론과 실제를 주차별로 추적합니다. 비평문 작성은 Tuché에서 진행합니다.
           </p>
         </div>
@@ -29,9 +29,9 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="mt-8 border-4 border-black bg-white p-6">
+        <div className="mt-8 border-[5px] border-black bg-white p-6 shadow-[8px_8px_0_#000]">
           <h2 className="text-2xl font-black mb-3">비평문 작성</h2>
-          <p className="font-semibold mb-4">비평 클래스의 실제 글 작성은 Tuché에서 진행합니다.</p>
+          <p className="font-bold mb-4">비평 클래스의 실제 글 작성은 Tuché에서 진행합니다.</p>
           <a
             href="/tuche"
             className="inline-flex border-4 border-black bg-white px-5 py-2 font-black hover:bg-black hover:text-white transition-colors"
@@ -58,11 +58,14 @@ function Card({
   cta: string;
 }) {
   return (
-    <article className="border-4 border-black bg-white p-6 shadow-[8px_8px_0_#000]">
+    <article className="border-[5px] border-black bg-white p-6 shadow-[10px_10px_0_#000]">
       <p className="text-xs font-black uppercase mb-2">{schedule}</p>
       <h3 className="text-3xl font-black mb-3">{title}</h3>
-      <p className="font-medium mb-5">{desc}</p>
-      <Link href={href} className="inline-flex border-4 border-black px-4 py-2 font-black hover:bg-black hover:text-white transition-colors">
+      <p className="font-bold mb-5">{desc}</p>
+      <Link
+        href={href}
+        className="inline-flex border-4 border-black px-4 py-2 font-black hover:bg-black hover:text-white transition-colors"
+      >
         {cta}
       </Link>
     </article>
