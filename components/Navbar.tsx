@@ -7,7 +7,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 bg-white border-b border-[#e5e5e5]">
       <div className="max-w-[1200px] mx-auto flex items-center justify-between h-[60px] px-6">
         <Link href="/" className="text-xl font-bold tracking-tight text-[#1A1A1A]">
-          대안학교
+          Tuché
         </Link>
 
         <div className="flex items-center gap-5">
