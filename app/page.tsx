@@ -1,52 +1,70 @@
-import { getPosts } from "@/lib/actions";
-import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 
-export default async function FeedPage() {
-  const posts = await getPosts();
-
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Publication Header */}
-      <section className="max-w-[728px] mx-auto px-6 pt-12 pb-8 border-b border-gray-100">
-        <h1 className="text-3xl font-bold text-[#1A1A1A] mb-2">Tuché</h1>
-        <p className="text-base text-gray-500">글의 기록</p>
-        <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
-          <span>아카이브</span>
+    <div className="min-h-screen bg-[#f3f3f3]">
+      <section className="max-w-6xl mx-auto px-6 py-10">
+        <div className="border-[6px] border-black bg-[#FDC700] p-8 md:p-12 shadow-[12px_12px_0_#000]">
+          <p className="text-sm font-black uppercase tracking-wider mb-3">대안학교</p>
+          <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4">공강 시간에 만드는 나만의 수업</h1>
+          <p className="text-base md:text-lg font-semibold max-w-3xl">
+            현대존재론과 비평의 이론과 실제를 주차별로 추적합니다. 비평문 작성은 Tuché에서 진행합니다.
+          </p>
         </div>
-      </section>
 
-      {/* Post List */}
-      <section className="max-w-[728px] mx-auto px-6 pb-20">
-        {posts.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div>
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        )}
+        <div className="grid md:grid-cols-2 gap-6 mt-10">
+          <Card
+            title="현대존재론"
+            schedule="화 수 12시부터 14시"
+            desc="백상현 교수님의 바디우 존재와 사건 책 강해 강의 27강"
+            href="/classes/modern-ontology"
+            cta="클래스 보기"
+          />
+          <Card
+            title="비평의 이론과 실제"
+            schedule="목 12시부터 14시"
+            desc="정신분석 기반 문화 비평문 실습 클래스"
+            href="/classes/criticism-practice"
+            cta="클래스 보기"
+          />
+        </div>
+
+        <div className="mt-8 border-4 border-black bg-white p-6">
+          <h2 className="text-2xl font-black mb-3">비평문 작성</h2>
+          <p className="font-semibold mb-4">비평 클래스의 실제 글 작성은 Tuché에서 진행합니다.</p>
+          <a
+            href="/tuche"
+            className="inline-flex border-4 border-black bg-white px-5 py-2 font-black hover:bg-black hover:text-white transition-colors"
+          >
+            Tuché 아카이브로 이동
+          </a>
+        </div>
       </section>
     </div>
   );
 }
 
-function EmptyState() {
+function Card({
+  title,
+  schedule,
+  desc,
+  href,
+  cta,
+}: {
+  title: string;
+  schedule: string;
+  desc: string;
+  href: string;
+  cta: string;
+}) {
   return (
-    <div className="py-20 text-center">
-      <h3 className="text-xl font-semibold text-[#1A1A1A] mb-2">
-        아직 게시된 글이 없습니다
-      </h3>
-      <p className="text-gray-400 mb-6">
-        첫 번째 글을 작성하고 기록을 시작해보세요.
-      </p>
-      <Link
-        href="/write"
-        className="inline-flex items-center gap-2 bg-[#FDC700] text-[#1A1A1A] px-6 py-3 rounded-full text-sm font-semibold hover:bg-[#FDC700]/90 transition-colors"
-      >
-        첫 글 쓰기
+    <article className="border-4 border-black bg-white p-6 shadow-[8px_8px_0_#000]">
+      <p className="text-xs font-black uppercase mb-2">{schedule}</p>
+      <h3 className="text-3xl font-black mb-3">{title}</h3>
+      <p className="font-medium mb-5">{desc}</p>
+      <Link href={href} className="inline-flex border-4 border-black px-4 py-2 font-black hover:bg-black hover:text-white transition-colors">
+        {cta}
       </Link>
-    </div>
+    </article>
   );
 }

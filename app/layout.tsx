@@ -8,14 +8,14 @@ export const metadata: Metadata = {
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : "http://localhost:3000"
   ),
-  title: "Tuché — 글의 기록",
-  description: "예술 글 토론 그룹의 아카이브",
+  title: "대안학교 | Tuché",
+  description: "현대존재론과 비평의 이론과 실제를 추적하는 온라인 강의 사이트",
   icons: {
     icon: "/logo.jpg",
   },
   openGraph: {
-    title: "Tuché",
-    description: "글의 기록",
+    title: "대안학교",
+    description: "공강 시간에 만드는 온라인 강의 사이트",
     images: ["/api/og/default"],
     siteName: "Tuché",
     url: undefined,

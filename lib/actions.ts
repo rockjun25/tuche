@@ -36,7 +36,7 @@ export async function createPost(formData: {
     .returning();
 
   const inserted = result[0];
-  revalidatePath("/");
+  revalidatePath("/tuche");
   redirect(`/article/${inserted.id}`);
 }
 
@@ -64,7 +64,7 @@ export async function updatePost(
     })
     .where(eq(posts.id, id));
 
-  revalidatePath("/");
+  revalidatePath("/tuche");
   revalidatePath(`/article/${id}`);
   redirect(`/article/${id}`);
 }

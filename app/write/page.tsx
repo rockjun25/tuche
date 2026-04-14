@@ -38,7 +38,7 @@ export default function WritePage() {
       {/* Top bar */}
       <div className="sticky top-[60px] z-40 bg-white border-b border-gray-100">
         <div className="max-w-[728px] mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-sm text-gray-500 hover:text-[#1A1A1A] transition-colors">
+          <Link href="/tuche" className="text-sm text-gray-500 hover:text-[#1A1A1A] transition-colors">
             ← 돌아가기
           </Link>
           <div className="flex items-center gap-3">
