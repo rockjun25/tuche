@@ -98,3 +98,10 @@ export async function autosavePost(
 
   return { ok: true, savedAt: new Date().toISOString() };
 }
+
+export async function deletePost(id: number) {
+  await db.delete(posts).where(eq(posts.id, id));
+
+  revalidatePath("/tuche");
+  revalidatePath("/");
+}
