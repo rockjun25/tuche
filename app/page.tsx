@@ -4,15 +4,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <section className="max-w-6xl mx-auto px-6 py-10">
-        <div className="border-[6px] border-black bg-white p-8 md:p-12 shadow-[14px_14px_0_#000]">
-          <p className="text-sm font-black uppercase tracking-wider mb-3">Tuché</p>
-          <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4">공강 시간에 만드는 나만의 수업</h1>
-          <p className="text-base md:text-lg font-bold max-w-3xl border-l-4 border-black pl-4">
-            현대존재론과 비평의 이론과 실제를 주차별로 추적합니다. 비평문 작성은 Tuché에서 진행합니다.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6 mt-10">
+        <div className="grid md:grid-cols-2 gap-6">
           <Card
             title="현대존재론"
             schedule="화 수 12시부터 14시"
