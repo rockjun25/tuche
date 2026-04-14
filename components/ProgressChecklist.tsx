@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getProgressMap, setProgress } from "@/lib/actions";
 
@@ -93,15 +94,25 @@ export function ProgressChecklist({ storageKey, classKey, items }: ProgressCheck
               className="h-4 w-4 accent-black"
             />
             {item.href ? (
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => markDone(item.id)}
-                className="text-sm font-semibold underline"
-              >
-                {item.label}
-              </a>
+              item.href.startsWith("/") ? (
+                <Link
+                  href={item.href}
+                  onClick={() => markDone(item.id)}
+                  className="text-sm font-semibold underline"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => markDone(item.id)}
+                  className="text-sm font-semibold underline"
+                >
+                  {item.label}
+                </a>
+              )
             ) : (
               <span className="text-sm font-semibold">{item.label}</span>
             )}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ProgressChecklist } from "@/components/ProgressChecklist";
 import { ClassTabs } from "@/components/ClassTabs";
 import { modernOntologyLectures } from "@/lib/courseData";
@@ -58,15 +59,13 @@ export default function ModernOntologyPage() {
                   <h2 className="text-2xl font-black mb-4">강의 링크</h2>
                   <div className="grid sm:grid-cols-2 gap-3">
                     {modernOntologyLectures.map((lecture) => (
-                      <a
-                        key={lecture.label}
-                        href={lecture.url}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Link
+                        key={lecture.id}
+                        href={`/study/modern-ontology/${lecture.id}`}
                         className="border-2 border-black p-3 text-sm font-black underline hover:bg-black hover:text-white transition-colors"
                       >
                         {lecture.label}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -75,9 +74,9 @@ export default function ModernOntologyPage() {
                   storageKey="daean-modern-ontology"
                   classKey="modern-ontology"
                   items={modernOntologyLectures.map((lecture) => ({
-                    id: lecture.label,
+                    id: lecture.id,
                     label: lecture.label,
-                    href: lecture.url,
+                    href: `/study/modern-ontology/${lecture.id}`,
                   }))}
                 />
               </div>

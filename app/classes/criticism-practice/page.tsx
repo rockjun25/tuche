@@ -58,15 +58,13 @@ export default function CriticismPracticePage() {
                     <h2 className="text-2xl font-black mb-4">강의 링크</h2>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {criticismLectures.map((lecture) => (
-                        <a
-                          key={lecture.label}
-                          href={lecture.url}
-                          target="_blank"
-                          rel="noreferrer"
+                        <Link
+                          key={lecture.id}
+                          href={`/study/criticism-practice/${lecture.id}`}
                           className="border-2 border-black p-3 text-sm font-black underline hover:bg-black hover:text-white transition-colors"
                         >
                           {lecture.label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -88,9 +86,9 @@ export default function CriticismPracticePage() {
                   classKey="criticism-practice"
                   items={[
                     ...criticismLectures.map((lecture) => ({
-                      id: `강의 ${lecture.label}`,
+                      id: lecture.id,
                       label: `강의 ${lecture.label}`,
-                      href: lecture.url,
+                      href: `/study/criticism-practice/${lecture.id}`,
                     })),
                     ...criticismWorkshopTopics.map((topic) => ({
                       id: `실습 ${topic}`,

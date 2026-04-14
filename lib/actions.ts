@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "./db";
-import { posts, learningProgress } from "./schema";
+import { posts, learningProgress, lectureNotes } from "./schema";
 import { eq, desc, isNull, and, isNotNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -155,6 +155,39 @@ export async function getProgressMap(classKey: string) {
     .where(eq(learningProgress.classKey, classKey));
 
   return Object.fromEntries(rows.map((row) => [row.itemId, row.completed]));
+}
+
+export async function getLectureNotes(classKey: string, lectureId: string) {
+  return db
+    .select()
+    .from(lectureNotes)
+    .where(
+      and(
+        eq(lectureNotes.classKey, classKey),
+        eq(lectureNotes.lectureId, lectureId)
+      )
+    )
+    .orderBy(desc(lectureNotes.createdAt));
+}
+
+export async function createLectureNote(
+  classKey: string,
+  lectureId: string,
+  content: string
+) {
+  const trimmed = content.trim();
+  if (!trimmed || trimmed.length > 280) {
+    return { ok: false };
+  }
+
+  await db.insert(lectureNotes).values({
+    classKey,
+    lectureId,
+    content: trimmed,
+  });
+
+  revalidatePath(`/study/${classKey}/${lectureId}`);
+  return { ok: true };
 }
 
 export async function setProgress(

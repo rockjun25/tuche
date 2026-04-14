@@ -44,5 +44,16 @@ export const learningProgress = pgTable(
   })
 );
 
+export const lectureNotes = pgTable("lecture_notes", {
+  id: serial("id").primaryKey(),
+  classKey: text("class_key").notNull(),
+  lectureId: text("lecture_id").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
+export type LectureNote = typeof lectureNotes.$inferSelect;
