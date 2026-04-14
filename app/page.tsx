@@ -8,14 +8,14 @@ export default function HomePage() {
           <Card
             title="현대존재론"
             schedule="화 수 12시부터 14시"
-            desc="백상현 교수님의 바디우 존재와 사건 책 강해 강의 27강"
+            desc="알랭 바디우: 존재와 사건 강해"
             href="/classes/modern-ontology"
             cta="클래스 보기"
           />
           <Card
             title="비평의 이론과 실제"
             schedule="목 12시부터 14시"
-            desc="정신분석 기반 문화 비평문 실습 클래스"
+            desc="정신분석 기반의 문화 비평과 글쓰기"
             href="/classes/criticism-practice"
             cta="클래스 보기"
           />
