@@ -42,7 +42,7 @@ export default async function StudyPage({
             rel="noreferrer"
             className="ml-auto border-2 border-black px-3 py-1.5 text-xs font-black uppercase hover:bg-black hover:text-white transition-colors"
           >
-            YouTube에서 열기 &nearr;
+            YouTube에서 열기 ↗
           </a>
         </div>
 
