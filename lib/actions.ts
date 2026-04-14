@@ -180,11 +180,39 @@ export async function createLectureNote(
     return { ok: false };
   }
 
-  await db.insert(lectureNotes).values({
-    classKey,
-    lectureId,
-    content: trimmed,
-  });
+  const inserted = await db
+    .insert(lectureNotes)
+    .values({
+      classKey,
+      lectureId,
+      content: trimmed,
+    })
+    .returning({
+      id: lectureNotes.id,
+      classKey: lectureNotes.classKey,
+      lectureId: lectureNotes.lectureId,
+      content: lectureNotes.content,
+      createdAt: lectureNotes.createdAt,
+    });
+
+  revalidatePath(`/study/${classKey}/${lectureId}`);
+  return { ok: true, note: inserted[0] };
+}
+
+export async function deleteLectureNote(
+  classKey: string,
+  lectureId: string,
+  noteId: number
+) {
+  await db
+    .delete(lectureNotes)
+    .where(
+      and(
+        eq(lectureNotes.id, noteId),
+        eq(lectureNotes.classKey, classKey),
+        eq(lectureNotes.lectureId, lectureId)
+      )
+    );
 
   revalidatePath(`/study/${classKey}/${lectureId}`);
   return { ok: true };

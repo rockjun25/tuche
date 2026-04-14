@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createLectureNote } from "@/lib/actions";
+import { createLectureNote, deleteLectureNote } from "@/lib/actions";
 import type { LectureNote } from "@/lib/schema";
 
 interface LectureNotesPanelProps {
@@ -24,11 +24,8 @@ export function LectureNotesPanel({ classKey, lectureId, initialNotes }: Lecture
 
     startTransition(async () => {
       const result = await createLectureNote(classKey, lectureId, trimmed);
-      if (result.ok) {
-        setNotes((prev) => [
-          { id: Date.now(), classKey, lectureId, content: trimmed, createdAt: new Date() },
-          ...prev,
-        ]);
+      if (result.ok && result.note) {
+        setNotes((prev) => [result.note, ...prev]);
         setContent("");
       }
     });
@@ -41,6 +38,18 @@ export function LectureNotesPanel({ classKey, lectureId, initialNotes }: Lecture
     const hours = d.getHours().toString().padStart(2, "0");
     const minutes = d.getMinutes().toString().padStart(2, "0");
     return `${month}/${day} ${hours}:${minutes}`;
+  };
+
+  const handleDelete = (noteId: number) => {
+    const ok = window.confirm("삭제하면 복구할 수 없습니다. 계속할까요?");
+    if (!ok) return;
+
+    startTransition(async () => {
+      const result = await deleteLectureNote(classKey, lectureId, noteId);
+      if (result.ok) {
+        setNotes((prev) => prev.filter((note) => note.id !== noteId));
+      }
+    });
   };
 
   return (
@@ -83,7 +92,17 @@ export function LectureNotesPanel({ classKey, lectureId, initialNotes }: Lecture
         ) : (
           notes.map((note) => (
             <div key={note.id} className="border-2 border-black p-3 hover:bg-[#f2f2f2] transition-colors">
-              <p className="text-sm font-semibold whitespace-pre-wrap break-words">{note.content}</p>
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-sm font-semibold whitespace-pre-wrap break-words">{note.content}</p>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(note.id)}
+                  disabled={isPending}
+                  className="shrink-0 border-2 border-black px-2 py-0.5 text-[10px] font-black uppercase hover:bg-black hover:text-white disabled:opacity-40"
+                >
+                  삭제
+                </button>
+              </div>
               <p className="text-xs font-bold text-neutral-400 mt-2">{formatTime(note.createdAt)}</p>
             </div>
           ))
