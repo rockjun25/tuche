@@ -42,10 +42,10 @@ export default function ModernOntologyPage() {
                   <div className="border-2 border-black p-4">
                     <h3 className="font-black text-base mb-2">운영 방식</h3>
                     <ul className="text-sm font-bold text-neutral-700 space-y-1 list-disc list-inside">
-                      <li>영상 강의 시청 후 텍스트 발제 작성</li>
-                      <li>발제문은 A4 1장, 정해진 템플릿에 따라 작성</li>
-                      <li>수업 시간에 발제 발표 및 토론 진행</li>
-                      <li>Tuché 플랫폼에서 진도 관리 및 과제 제출</li>
+                      <li>주차별로는 영상 강의 시청 중심으로 진행</li>
+                      <li>주차 발제문은 작성하지 않음</li>
+                      <li>중간고사와 기말고사는 모두 발제문 제출로 진행</li>
+                      <li>Tuché 플랫폼에서 진도 관리 및 시험 발제문 제출</li>
                     </ul>
                   </div>
                 </div>
@@ -136,12 +136,12 @@ export default function ModernOntologyPage() {
                 </div>
 
                 <div className="border-2 border-black p-4 mt-6 bg-neutral-50">
-                  <h3 className="font-black text-base mb-2">과제 제출 흐름</h3>
+                  <h3 className="font-black text-base mb-2">중간 기말 발제문 제출 흐름</h3>
                   <ol className="text-sm font-bold text-neutral-700 space-y-1 list-decimal list-inside">
-                    <li>강의 영상 시청 후 해당 주차 텍스트 읽기</li>
-                    <li>위 템플릿에 맞춰 발제문 작성 (A4 1장)</li>
-                    <li>수업 시간에 발제 발표 및 토론</li>
-                    <li>Tuché에서 최종 정리본 글쓰기로 제출</li>
+                    <li>주차별 강의를 시청하며 핵심 개념 메모 누적</li>
+                    <li>중간고사 기간에 위 템플릿으로 중간 발제문 작성</li>
+                    <li>기말고사 기간에 위 템플릿으로 기말 발제문 작성</li>
+                    <li>Tuché에서 최종본 글로 제출</li>
                   </ol>
                 </div>
               </div>
