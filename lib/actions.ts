@@ -5,6 +5,7 @@ import { posts, learningProgress, lectureNotes } from "./schema";
 import { eq, desc, isNull, and, isNotNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { syncLectureNotesToObsidian } from "./obsidianSync";
 
 export async function getPosts() {
   return db
@@ -170,6 +171,25 @@ export async function getLectureNotes(classKey: string, lectureId: string) {
     .orderBy(desc(lectureNotes.createdAt));
 }
 
+async function syncLectureNotesByLecture(classKey: string, lectureId: string) {
+  const notes = await db
+    .select()
+    .from(lectureNotes)
+    .where(
+      and(
+        eq(lectureNotes.classKey, classKey),
+        eq(lectureNotes.lectureId, lectureId)
+      )
+    )
+    .orderBy(desc(lectureNotes.createdAt));
+
+  try {
+    await syncLectureNotesToObsidian(classKey, lectureId, notes);
+  } catch (error) {
+    console.error("[obsidian-sync] failed", error);
+  }
+}
+
 export async function createLectureNote(
   classKey: string,
   lectureId: string,
@@ -195,6 +215,8 @@ export async function createLectureNote(
       createdAt: lectureNotes.createdAt,
     });
 
+  await syncLectureNotesByLecture(classKey, lectureId);
+
   revalidatePath(`/study/${classKey}/${lectureId}`);
   return { ok: true, note: inserted[0] };
 }
@@ -213,6 +235,8 @@ export async function deleteLectureNote(
         eq(lectureNotes.lectureId, lectureId)
       )
     );
+
+  await syncLectureNotesByLecture(classKey, lectureId);
 
   revalidatePath(`/study/${classKey}/${lectureId}`);
   return { ok: true };
