@@ -79,6 +79,7 @@ export function Editor({ content = "", onChange }: EditorProps) {
       }),
       Image.configure({
         inline: false,
+        allowBase64: true,
         HTMLAttributes: {
           class: "editor-image",
         },
