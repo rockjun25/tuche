@@ -69,16 +69,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <img
             src={post.coverImage}
             alt=""
-            className="w-full h-[480px] object-cover"
+            className="w-full h-[260px] sm:h-[480px] object-cover"
           />
         </div>
       )}
 
-      <div className="max-w-[728px] mx-auto px-6 pt-10 pb-20 relative">
+      <div className="max-w-[728px] mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-20 relative">
         {/* Edit button */}
         <Link
           href={`/edit/${post.id}`}
-          className="absolute top-10 right-6 w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:text-[#1A1A1A] hover:border-gray-300 transition-colors"
+          className="sm:absolute sm:top-10 sm:right-6 ml-auto mb-4 sm:mb-0 w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:text-[#1A1A1A] hover:border-gray-300 transition-colors"
           title="수정"
         >
           <svg
@@ -102,10 +102,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </h1>
 
           {post.subtitle && (
-            <p className="text-xl text-gray-500 mb-4">{post.subtitle}</p>
+            <p className="text-lg sm:text-xl text-gray-500 mb-4">{post.subtitle}</p>
           )}
 
-          <div className="flex items-center gap-3 text-sm text-gray-400">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm text-gray-400">
             <span className="font-medium text-gray-600">{post.author}</span>
             <span>·</span>
             <time>{formatDate(post.createdAt)}</time>

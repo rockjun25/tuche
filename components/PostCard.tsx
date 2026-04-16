@@ -28,8 +28,7 @@ interface PostCardProps {
 function CoverImage({ src }: { src: string }) {
   return (
     <div
-      className="relative flex-shrink-0 overflow-hidden rounded-md"
-      style={{ width: 112, height: 112 }}
+      className="relative flex-shrink-0 overflow-hidden rounded-md w-[88px] h-[88px] sm:w-[112px] sm:h-[112px]"
     >
       {/* 블러 배경 — 이미지 색감을 그대로 퍼트려서 letterbox 여백 채움 */}
       <img
@@ -55,7 +54,7 @@ export function PostCard({ post }: PostCardProps) {
 
   return (
     <Link href={`/article/${post.id}`} className="group block py-6 border-b border-gray-100">
-      <div className="flex items-start justify-between gap-5">
+      <div className="flex items-start justify-between gap-3 sm:gap-5">
         <div className="flex-1 min-w-0">
           <h2 className="text-[18px] font-bold text-[#1A1A1A] leading-snug mb-1 group-hover:text-[#1A1A1A]/70 transition-colors">
             {post.title}

@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      <section className="max-w-6xl mx-auto px-6 py-10">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="grid md:grid-cols-2 gap-6">
           <Card
             title="현대존재론"
@@ -50,9 +50,9 @@ function Card({
   cta: string;
 }) {
   return (
-    <article className="border-[5px] border-black bg-white p-6 shadow-[10px_10px_0_#000]">
+    <article className="border-[5px] border-black bg-white p-5 sm:p-6 shadow-[10px_10px_0_#000]">
       <p className="text-xs font-black uppercase mb-2">{schedule}</p>
-      <h3 className="text-3xl font-black mb-3">{title}</h3>
+      <h3 className="text-2xl sm:text-3xl font-black mb-3">{title}</h3>
       <p className="font-bold mb-5">{desc}</p>
       <Link
         href={href}

@@ -7,7 +7,7 @@ export default async function TucheFeedPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="max-w-[728px] mx-auto px-6 pt-12 pb-8 border-b border-gray-100">
+      <section className="max-w-[728px] mx-auto px-4 sm:px-6 pt-10 sm:pt-12 pb-8 border-b border-gray-100">
         <h1 className="text-3xl font-bold text-[#1A1A1A] mb-2">Tuché</h1>
         <p className="text-base text-gray-500">글의 기록</p>
         <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
@@ -18,7 +18,7 @@ export default async function TucheFeedPage() {
         </div>
       </section>
 
-      <section className="max-w-[728px] mx-auto px-6 pb-20">
+      <section className="max-w-[728px] mx-auto px-4 sm:px-6 pb-20">
         {posts.length === 0 ? (
           <EmptyState />
         ) : (

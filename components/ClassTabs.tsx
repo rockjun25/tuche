@@ -19,7 +19,7 @@ export function ClassTabs({ children }: ClassTabsProps) {
           <button
             key={tab}
             onClick={() => setActive(tab)}
-            className={`flex-1 min-w-0 px-4 py-3 text-sm font-black uppercase transition-colors whitespace-nowrap ${
+            className={`flex-none md:flex-1 min-w-[110px] md:min-w-0 px-4 py-3 text-sm font-black uppercase transition-colors whitespace-nowrap ${
               active === tab
                 ? "bg-black text-white"
                 : "bg-white text-black hover:bg-neutral-100"

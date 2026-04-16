@@ -6,10 +6,10 @@ import { criticismLectures, criticismWorkshopTopics } from "@/lib/courseData";
 export default function CriticismPracticePage() {
   return (
     <div className="min-h-screen bg-white">
-      <section className="max-w-6xl mx-auto px-6 py-10">
-        <div className="border-[6px] border-black bg-white p-8 shadow-[12px_12px_0_#000] mb-8">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="border-[6px] border-black bg-white p-5 sm:p-8 shadow-[12px_12px_0_#000] mb-8">
           <p className="text-sm font-black uppercase mb-2">비평의 이론과 실제</p>
-          <h1 className="text-4xl font-black mb-4">정신분석 기반 문화 비평문 실습</h1>
+          <h1 className="text-3xl sm:text-4xl font-black mb-4">정신분석 기반 문화 비평문 실습</h1>
           <p className="font-bold mb-3">백상현 교수님 강의를 듣고 실제 비평문 작성까지 진행합니다.</p>
           <p className="text-sm font-black">수업 시간, 목 KST 12시부터 14시</p>
         </div>

@@ -86,7 +86,7 @@ export function ProgressChecklist({ storageKey, classKey, items }: ProgressCheck
       </div>
       <div className="space-y-2 max-h-[420px] overflow-auto pr-1">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center gap-3 border-2 border-black p-2 bg-white hover:bg-[#f2f2f2]">
+          <div key={item.id} className="flex items-center gap-3 border-2 border-black p-2 bg-white hover:bg-[#f2f2f2] min-w-0">
             <input
               type="checkbox"
               checked={!!checked[item.id]}
@@ -98,7 +98,7 @@ export function ProgressChecklist({ storageKey, classKey, items }: ProgressCheck
                 <Link
                   href={item.href}
                   onClick={() => markDone(item.id)}
-                  className="text-sm font-semibold underline"
+                  className="text-sm font-semibold underline min-w-0 break-words"
                 >
                   {item.label}
                 </Link>
@@ -108,13 +108,13 @@ export function ProgressChecklist({ storageKey, classKey, items }: ProgressCheck
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => markDone(item.id)}
-                  className="text-sm font-semibold underline"
+                  className="text-sm font-semibold underline min-w-0 break-words"
                 >
                   {item.label}
                 </a>
               )
             ) : (
-              <span className="text-sm font-semibold">{item.label}</span>
+              <span className="text-sm font-semibold min-w-0 break-words">{item.label}</span>
             )}
           </div>
         ))}
