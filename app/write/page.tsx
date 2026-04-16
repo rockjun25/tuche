@@ -128,7 +128,7 @@ export default function WritePage() {
         />
 
         {/* Editor */}
-        <Editor content="" onChange={setContent} />
+        <Editor content={content} onChange={setContent} />
       </div>
     </div>
   );

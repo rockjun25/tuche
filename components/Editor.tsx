@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -67,6 +67,8 @@ async function compressImageDataUrl(dataUrl: string) {
 }
 
 export function Editor({ content = "", onChange }: EditorProps) {
+  const isApplyingExternalContentRef = useRef(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -129,6 +131,7 @@ export function Editor({ content = "", onChange }: EditorProps) {
       },
     },
     onUpdate: ({ editor }) => {
+      if (isApplyingExternalContentRef.current) return;
       onChange(editor.getHTML());
     },
   });
@@ -138,7 +141,9 @@ export function Editor({ content = "", onChange }: EditorProps) {
 
     const currentHtml = editor.getHTML();
     if (content !== currentHtml) {
+      isApplyingExternalContentRef.current = true;
       editor.commands.setContent(content || "", { emitUpdate: false });
+      isApplyingExternalContentRef.current = false;
     }
   }, [editor, content]);
 
