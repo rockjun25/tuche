@@ -98,7 +98,18 @@ export function EditForm({ post }: EditFormProps) {
         author?: string;
         coverImage?: string;
         content?: string;
+        updatedAt?: number;
       };
+
+      const draftUpdatedAt =
+        typeof draft.updatedAt === "number" && Number.isFinite(draft.updatedAt)
+          ? draft.updatedAt
+          : 0;
+
+      if (!draftUpdatedAt || draftUpdatedAt <= post.updatedAt.getTime()) {
+        window.localStorage.removeItem(draftKey);
+        return;
+      }
 
       if (typeof draft.title === "string") setTitle(draft.title);
       if (typeof draft.subtitle === "string") setSubtitle(draft.subtitle);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -131,6 +132,15 @@ export function Editor({ content = "", onChange }: EditorProps) {
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const currentHtml = editor.getHTML();
+    if (content !== currentHtml) {
+      editor.commands.setContent(content || "", { emitUpdate: false });
+    }
+  }, [editor, content]);
 
   return (
     <div className="rounded-lg overflow-hidden border border-gray-200 bg-white">
